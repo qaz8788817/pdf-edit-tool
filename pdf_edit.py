@@ -71,7 +71,8 @@ class ModernPDFApp(ctk.CTk):
             ("Remove the pages", self.run_remove, "#95a5a6"),
             ("Extract the pages", self.run_extract, "#9b59b6"),
             ("Extract and save individually", self.run_extract_split, "#f1c40f"), 
-            ("Resize to Standard A4", self.run_resize_to_a4, "#1abc9c")
+            ("Resize to Standard A4", self.run_resize_to_a4, "#1abc9c"), 
+            ("Insert A into B", self.run_insert_pdf, "#e67e22")
         ]
 
         for i, (text, cmd, color) in enumerate(buttons):
@@ -215,6 +216,48 @@ class ModernPDFApp(ctk.CTk):
             writer.write(f)
         
         messagebox.showinfo("Success", "All pages resized to standard A4!")
+    
+    def run_insert_pdf(self):
+        """從介面的輸入框讀取頁碼，將 File 1 插入 File 2 中"""
+        if len(self.selected_files) < 2:
+            messagebox.showwarning("Warning", "Please add at least 2 files!")
+            return
+
+        # ✨ 改動點：直接調用原本就有的 parse_pages 函數
+        pages = self.parse_pages() 
+        if not pages:
+            messagebox.showwarning("Warning", "Please enter a valid page number in the entry box!")
+            return
+        
+        # 我們取輸入的第一個數字作為插入點
+        insert_at = pages[0] - 1
+
+        save_path = filedialog.asksaveasfilename(defaultextension=".pdf")
+        if not save_path: return
+
+        file_a = self.selected_files[0]
+        file_b = self.selected_files[1]
+
+        reader_a = PdfReader(file_a)
+        reader_b = PdfReader(file_b)
+        writer = PdfWriter()
+
+        # 執行插入邏輯... (與之前相同)
+        for i in range(len(reader_b.pages)):
+            if i == insert_at:
+                for page_a in reader_a.pages:
+                    writer.add_page(page_a)
+            writer.add_page(reader_b.pages[i])
+
+        # 如果插入位置在最後
+        if insert_at >= len(reader_b.pages):
+            for page_a in reader_a.pages:
+                writer.add_page(page_a)
+
+        with open(save_path, "wb") as f:
+            writer.write(f)
+        
+        messagebox.showinfo("Success", f"Inserted at page {insert_at + 1} successfully!")
 
 if __name__ == "__main__":
     app = ModernPDFApp()

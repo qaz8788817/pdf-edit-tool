@@ -13,3 +13,6 @@ If you want a cute .ico showing on your Desktop:
 3. You got the cutest pdf tool in the build dir. You can use it right now.
 
 More function about the tool, check this website: https://qaz8788817.github.io/projects/5-pdf-edit/
+
+## Update new function
+Insert A into B at a specific page.

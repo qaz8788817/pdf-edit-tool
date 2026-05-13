@@ -15,4 +15,4 @@ If you want a cute .ico showing on your Desktop:
 More function about the tool, check this website: https://qaz8788817.github.io/projects/5-pdf-edit/
 
 ## Update new function
-Insert A into B at a specific page.
+2026-05-13  Insert A into B at a specific page.
